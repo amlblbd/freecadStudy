@@ -1,13 +1,6 @@
 [requires]
-qt/6.6.2@
+qt/6.6.2
 
 [generators]
 CMakeDeps
 CMakeToolchain
-
-[options]
-qt/*:shared=True
-qt/*:with_sqlite3=False
-qt/*:with_pq=False
-qt/*:with_odbc=False
-qt/*:with_libjpeg=False
