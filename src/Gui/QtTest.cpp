@@ -1,25 +1,21 @@
 #include <QApplication>
-#include <QWidget>
+#include <QByteArray>
+#include <QCoreApplication>
 #include <QLabel>
-#include <QVBoxLayout>
+#include <QTimer>
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char** argv) {
+    if (qEnvironmentVariableIsEmpty("DISPLAY") && qEnvironmentVariableIsEmpty("WAYLAND_DISPLAY")) {
+        qputenv("QT_QPA_PLATFORM", QByteArray("offscreen"));
+    }
+
     QApplication app(argc, argv);
 
-    QWidget window;
-    window.setWindowTitle("Qt6 Test Window");
-    window.resize(400, 300);
+    QLabel label("Qt 6.6.2 OK");
+    label.resize(320, 80);
+    label.show();
 
-    QVBoxLayout *layout = new QVBoxLayout(&window);
-    
-    QLabel *label = new QLabel("Hello Qt6 World!", &window);
-    label->setAlignment(Qt::AlignCenter);
-    
-    layout->addWidget(label);
-    
-    window.setLayout(layout);
-    window.show();
+    QTimer::singleShot(50, &app, &QCoreApplication::quit);
 
     return app.exec();
 }
