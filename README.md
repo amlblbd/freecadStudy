@@ -25,3 +25,10 @@
 └── 📁 tests/                     # 测试目录，引入gtest
     └── 📄 .gitignore
 ```
+
+### 环境设置
+Ubuntu
+```bash
+sudo apt update
+sudo apt install llvm-18 llvm-18-dev clang-18 libclang-18-dev
+```
