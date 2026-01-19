@@ -1,6 +1,7 @@
 # freecadStudy
 本项目是freecad的学习验证项目，参考freecad的架构和技术方案，实现草图、零件、装配功能的验证。
 本项目图形界面使用qt6，建模使用occt库，装配求解器使用OndselSolver
+```
 📁 project
 ├── 📄 README.md
 ├── 📁 data/                      # 数据目录
@@ -23,3 +24,4 @@
 │       └── 📄 .gitignore
 └── 📁 tests/                     # 测试目录，引入gtest
     └── 📄 .gitignore
+```
