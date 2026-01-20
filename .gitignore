@@ -44,3 +44,6 @@ CMakeUserPresets.json
 
 # debug information files
 *.dwo
+
+# Index files
+*.idx

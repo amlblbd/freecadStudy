@@ -64,6 +64,7 @@ if [[ "$verbosity" == "1" ]]; then
   conan install . -of build -s "build_type=${build_type}" --build=missing "${conan_conf[@]}"
 else
   printf '%s\n' "[1/3] Conan install (${build_type})..."
+  printf '%s\n' "conan-install: ${conan_log}"
   : > "${conan_log}"
   if ! conan install . -of build -s "build_type=${build_type}" --build=missing "${conan_conf[@]}" >"${conan_log}" 2>&1; then
     printf '%s\n' "Conan install failed. Log: ${conan_log}"
@@ -76,6 +77,7 @@ if [[ "$verbosity" == "1" ]]; then
   cmake --preset "${preset}"
 else
   printf '%s\n' "[2/3] CMake configure (${preset})..."
+  printf '%s\n' "cmake-configure: ${cmake_log}"
   : > "${cmake_log}"
   if ! cmake --preset "${preset}" >"${cmake_log}" 2>&1; then
     printf '%s\n' "CMake configure failed. Log: ${cmake_log}"
