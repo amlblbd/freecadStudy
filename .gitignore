@@ -2,6 +2,7 @@
 CMakeUserPresets.json
 .envrc
 
+/dist
 
 # Prerequisites
 *.d

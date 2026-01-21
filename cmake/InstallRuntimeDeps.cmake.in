@@ -1,0 +1,39 @@
+if(NOT WIN32)
+  return()
+endif()
+
+set(_bindir "@CMAKE_INSTALL_BINDIR@")
+set(_target_name "@MYFREECAD_TARGET@")
+set(_qt_prefix "@MYFREECAD_QT_PREFIX@")
+set(_qt_bin "${_qt_prefix}/bin")
+if(NOT CMAKE_EXECUTABLE_SUFFIX)
+  set(CMAKE_EXECUTABLE_SUFFIX ".exe")
+endif()
+set(_build_exe "@CMAKE_BINARY_DIR@/${_target_name}${CMAKE_EXECUTABLE_SUFFIX}")
+set(_exe_path "${CMAKE_INSTALL_PREFIX}/${_bindir}/${_target_name}${CMAKE_EXECUTABLE_SUFFIX}")
+
+if(EXISTS "${_build_exe}")
+  set(_dep_root "${_build_exe}")
+elseif(EXISTS "${_exe_path}")
+  set(_dep_root "${_exe_path}")
+else()
+  message(STATUS "Runtime deps: executable not found: ${_build_exe} or ${_exe_path}")
+  return()
+endif()
+
+file(GET_RUNTIME_DEPENDENCIES
+  EXECUTABLES "${_dep_root}"
+  DIRECTORIES "${_qt_bin}" "@CMAKE_BINARY_DIR@"
+  RESOLVED_DEPENDENCIES_VAR _deps
+  UNRESOLVED_DEPENDENCIES_VAR _deps_unresolved
+  PRE_EXCLUDE_REGEXES "api-ms-" "ext-ms-"
+  POST_EXCLUDE_REGEXES ".*system32/.*"
+)
+
+foreach(_dep IN LISTS _deps)
+  file(COPY "${_dep}" DESTINATION "${CMAKE_INSTALL_PREFIX}/${_bindir}")
+endforeach()
+
+if(_deps_unresolved)
+  message(STATUS "Unresolved runtime deps: ${_deps_unresolved}")
+endif()
