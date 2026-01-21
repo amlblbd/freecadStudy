@@ -1,16 +1,11 @@
 [settings]
 os=Windows
 arch=x86_64
-compiler=clang
-compiler.version=17
-compiler.libcxx=libstdc++11
+compiler=msvc
+build_type=Release
+compiler.version=194
+compiler.runtime=dynamic
 compiler.cppstd=20
-build_type=Debug
 
 [conf]
 tools.cmake.cmaketoolchain:generator=Ninja
-tools.build:compiler_executables={"c": "clang", "cpp": "clang++"}
-
-[buildenv]
-CC=clang
-CXX=clang++
