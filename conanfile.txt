@@ -1,5 +1,6 @@
 [requires]
 qt/6.8.3
+opencascade/7.9.1
 
 
 [generators]

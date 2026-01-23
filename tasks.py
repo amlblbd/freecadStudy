@@ -1,5 +1,3 @@
-
-
 from pathlib import Path
 import json
 import platform
@@ -74,6 +72,7 @@ def deps(ctx, profile=None, conan_conf=None):
     _conan_install(ctx, "Debug", profile_path, conan_conf)
     _conan_install(ctx, "Release", profile_path, conan_conf)
 
+
 @task
 def build(ctx, preset=None):
     # 配置并编译 debug/release
@@ -94,6 +93,7 @@ def build(ctx, preset=None):
         ctx.run(f'cmake --preset "{name}"', echo=True)
         ctx.run(f'cmake --build --preset "{name}"', echo=True)
 
+
 def _install_preset(ctx, preset: str, prefix: Path | None) -> None:
     install_dir = prefix if prefix else (DIST_DIR / preset)
     install_dir.mkdir(parents=True, exist_ok=True)
@@ -102,6 +102,7 @@ def _install_preset(ctx, preset: str, prefix: Path | None) -> None:
         f'cmake --install "{binary_dir}" --prefix "{install_dir}"',
         echo=True,
     )
+
 
 @task
 def package(ctx, preset=None, prefix=None):
@@ -126,3 +127,11 @@ def clean(ctx):
     # 清理生成目录
     if BUILD_DIR.exists():
         shutil.rmtree(BUILD_DIR)
+
+
+@task
+def deps_graph(ctx):
+    ctx.run(
+        (f"conan graph info . --format=html > graph.html"),
+        echo=True,
+    )

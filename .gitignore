@@ -1,6 +1,7 @@
 **/build/
 CMakeUserPresets.json
 .envrc
+graph.html
 
 /dist
 
