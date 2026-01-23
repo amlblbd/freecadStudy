@@ -3,6 +3,7 @@ project(MyFreeCAD)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_AUTOMOC ON)
 
 # 生成 compile_commands.json，供 IDE/clangd 读取真实的编译参数（include 路径/宏/编译选项）
 # 这样你在编辑器里看到的“波浪线报错”会显著减少
@@ -14,14 +15,23 @@ if(MSVC)
   add_link_options($<$<CONFIG:Debug>:/DEBUG>)
 endif()
 
-
+find_package(OpenCASCADE REQUIRED)
 find_package(Qt6 CONFIG REQUIRED COMPONENTS Widgets)
 
 # 最小可执行程序：用于验证 Qt6 是否能成功编译、链接与运行
-add_executable(MyFreeCAD src/Gui/QtTest.cpp)
+add_executable(MyFreeCAD 
+src/Gui/OccView.h
+src/Gui/OccView.cpp
+src/Gui/QtTest.cpp
+)
 
 # 链接顺序很重要：把平台插件放在 Qt6::Widgets 前面，避免静态库符号在某些链接器/参数下解析不到
-target_link_libraries(MyFreeCAD PRIVATE ${myfreecad_qt_platform_plugins} Qt6::Widgets)
+target_include_directories(MyFreeCAD PRIVATE ${OpenCASCADE_INCLUDE_DIR})
+
+target_link_libraries(MyFreeCAD PRIVATE ${myfreecad_qt_platform_plugins}
+  Qt6::Widgets
+  ${OpenCASCADE_LIBRARIES}
+)
 
 include(GNUInstallDirs)
 
@@ -38,8 +48,8 @@ if(WIN32)
       TARGET MyFreeCAD
       POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
-              $<TARGET_RUNTIME_DLLS:MyFreeCAD>
-              $<TARGET_FILE_DIR:MyFreeCAD>
+      $<TARGET_RUNTIME_DLLS:MyFreeCAD>
+      $<TARGET_FILE_DIR:MyFreeCAD>
       COMMAND_EXPAND_LISTS
       COMMENT "Copy runtime DLLs for debugging"
     )
@@ -52,8 +62,8 @@ if(WIN32)
         POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:MyFreeCAD>/plugins/platforms"
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                "${_qt_platform_plugin}"
-                "$<TARGET_FILE_DIR:MyFreeCAD>/plugins/platforms"
+        "${_qt_platform_plugin}"
+        "$<TARGET_FILE_DIR:MyFreeCAD>/plugins/platforms"
         COMMENT "Copy Qt platform plugin"
       )
     endif()
