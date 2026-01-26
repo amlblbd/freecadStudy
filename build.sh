@@ -12,7 +12,7 @@ set -euo pipefail
 # - FREECADSTUDY_VERBOSE=1：显示完整 conan/cmake 输出（调试用）
 # - CONAN_INSTALL_SYSTEM_DEPS=0：禁止 conan 通过 apt 安装系统依赖（无 sudo 环境时用）
 
-build_type="${1:-Release}"
+build_type="${1:-Debug}"
 action="${2:-build}"
 verbosity="${FREECADSTUDY_VERBOSE:-0}"
 
@@ -96,4 +96,12 @@ if [[ "$action" == "run" ]]; then
   source ./build/conanrun.sh
   set -u
   ./build/MyFreeCAD
+fi
+
+# 输出可执行文件绝对路径
+if [[ "$build_type" == "Release" ]]; then
+  printf '%s\n' "MyFreeCAD: $(realpath build/build/Release/MyFreeCAD)"
+fi
+if [[ "$build_type" == "Debug" ]]; then
+  printf '%s\n' "MyFreeCAD: $(realpath build/build/Debug/MyFreeCAD)"
 fi
